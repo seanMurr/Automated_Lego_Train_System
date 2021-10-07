@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import serial
 if __name__ == '__main__':
+    # connect to USB port
     ser = serial.Serial('/dev/ttyUSB0', 115200, timeout=1)
     ser.flush()
     while True:

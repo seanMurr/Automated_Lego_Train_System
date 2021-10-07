@@ -78,7 +78,7 @@ void loop() {
       Serial.readBytesUntil('\n',desc[comId],20);
       Serial.println(desc[comId]);
       // set motors 
-      Serial.println("Waiting for motor A direction");
+      Serial.println("Waiting for motor directions");
       while (!Serial.available()) {}
       port[comId][0] = Serial.parseInt();
       port[comId][1] = Serial.parseInt();
