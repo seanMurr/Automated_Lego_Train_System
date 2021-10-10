@@ -17,3 +17,15 @@ def sendToHub(port, msg):
     ser.flush()
     print("Hub msg: "+msg)
     ser.write((msg+"\n").encode())
+
+if __name__ == '__main__':
+
+    print('Number of arguments:', len(sys.argv), 'arguments.')
+    msg = ""
+    port = "/dev/ttyUSB"+sys.argv[1]
+    for i in range(len(sys.argv)-2):
+        msg = msg + sys.argv[i+2]
+        print(port)
+    print(msg)
+    # hubComs.sendToHub('/dev/ttyUSB0',msg)
+    sendToHub(port,msg)

@@ -2,7 +2,7 @@
 import time
 from cars import Car, Engine
 from Train import Train
-from trackSegment import Segment
+from Segment import Segment
 import paho.mqtt.client as mqttClient
 
 mqttServerAddress = "10.1.1.50"
@@ -50,9 +50,9 @@ def main():
 def createObjects():
     # create track segments
     print("******Creating Track Segments******")
-    trackSegments.append(Segment(0,"Seg00",144,None,0,None,0,"lego/train/segments/indicator/00",None,0,20))
-    trackSegments.append(Segment(1,"Seg01",144,None,0,None,0,"lego/train/segments/indicator/01",None,0,20))
-    trackSegments.append(Segment(2,"Seg02",144,None,0,None,0,"lego/train/segments/indicator/02",None,0,20))
+    trackSegments.append(Segment(0,"Seg00",144,None,0,None,0,"lego/train/segments/indicator/00",None,0,40))
+    trackSegments.append(Segment(1,"Seg01",144,None,0,None,0,"lego/train/segments/indicator/01",None,0,40))
+    trackSegments.append(Segment(2,"Seg02",144,None,0,None,0,"lego/train/segments/indicator/02",None,0,40))
 
 
     # attach track segments together
@@ -68,15 +68,15 @@ def createObjects():
     # create cars
     print("*****Creating cars******")
     # 0
-    cars.append(Engine("002","ResPass 1a",20,True,True,True,("engine","passanger"),
+    cars.append(Engine("002","ResPass 1a",50,True,True,True,("engine","passanger"),
                     "90:84:2b:01:a7:3a","/dev/ttyUSB0","0",(1,0)))
     # 1
-    cars.append(Engine("001","Green Cargo 1a",20,True,True,True,("engine","cargo"),
+    cars.append(Engine("001","Green Cargo 1a",50,True,True,True,("engine","cargo"),
                     "90:84:2b:07:b8:83","/dev/ttyUSB0","2",(-1,1)))
 
 
 
-    # created trains
+    # create trains
     print("******Creating Trains******")
     trains.append(Train([cars[0]],0,1))
     trains.append(Train([cars[1]],0,1))
@@ -115,7 +115,7 @@ def on_message(client, userdata, msg):
             if segment.getSet_microId() is not None:
                 # compare topic to endIndicator
                 if segment.getSet_microId() in msg.topic:
-                    print("Received " + str(msg.payload) +" from segment "+str(segment.getSet_id()))
+                    print("Received " + str(msg.payload.decode('utf-8')) +" from segment "+str(segment.getSet_id()))
                     segment.processMessage(msg.topic, msg.payload.decode('utf-8'))
                     # track.activateSegEndIndicator(msg.payload)
 

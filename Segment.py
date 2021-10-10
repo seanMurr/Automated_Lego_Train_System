@@ -101,9 +101,9 @@ class Segment:
 # Methods **********************************************************************
     def processMessage(self, topic, message):
         if "segments/indicator" in topic:
-            if "open" in message:
+            if True:
                 print("Got HERE")
-                print("open message received for"+topic)
+                print("train has triggered end of segment "+str(self.id))
                 # does this segment have a train
                 if self.train is None:
                     # no train currently in segment
@@ -151,7 +151,7 @@ class Segment:
                 # there is a train here
                 if self.prevSegment.get_train().getSet_speed() == 0:
                     # the train here is stopped
-                    # check if trainis traveling towards this segment
+                    # check if train is traveling towards this segment
                     if self.prevSegment.get_train().getSet_direction() == 1:
                         # train is heading this way so send it
                         self.prevSegment.sendTrain()
