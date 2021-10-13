@@ -39,7 +39,7 @@ def main():
     # client.loop_forever()
 
     # if start is True then tell segment[0] to send train.
-    trackSegments[2].sendTrain()
+    trackSegments[0].sendTrain()
 
     start = False
 
@@ -53,40 +53,45 @@ def createObjects():
     trackSegments.append(Segment(0,"Seg00",144,None,0,None,0,"lego/train/segments/indicator/00",None,0,40))
     trackSegments.append(Segment(1,"Seg01",144,None,0,None,0,"lego/train/segments/indicator/01",None,0,40))
     trackSegments.append(Segment(2,"Seg02",144,None,0,None,0,"lego/train/segments/indicator/02",None,0,40))
+    trackSegments.append(Segment(0,"Seg03",144,None,0,None,0,"lego/train/segments/indicator/03",None,0,40))
 
 
     # attach track segments together
     print("******Connecting Track Segments******")
     # outside loop
     trackSegments[0].getSet_nextSegment(trackSegments[1])
-    trackSegments[0].getSet_prevSegment(trackSegments[2])
+    trackSegments[0].getSet_prevSegment(trackSegments[3])
     trackSegments[1].getSet_nextSegment(trackSegments[2])
     trackSegments[1].getSet_prevSegment(trackSegments[0])
-    trackSegments[2].getSet_nextSegment(trackSegments[0])
+    trackSegments[2].getSet_nextSegment(trackSegments[3])
     trackSegments[2].getSet_prevSegment(trackSegments[1])
+    trackSegments[3].getSet_nextSegment(trackSegments[0])
+    trackSegments[3].getSet_prevSegment(trackSegments[2])
 
     # create cars
     print("*****Creating cars******")
     # 0
-    cars.append(Engine("002","ResPass 1a",50,True,True,True,("engine","passanger"),
-                    "90:84:2b:01:a7:3a","/dev/ttyUSB0","0",(1,0)))
+    cars.append(Engine("002","RedPass 1a",50,True,True,True,("engine","passanger"),
+                    "90:84:2b:01:a7:3a","/dev/ttyUSB0","0",(1,0),60))
     # 1
     cars.append(Engine("001","Green Cargo 1a",50,True,True,True,("engine","cargo"),
-                    "90:84:2b:07:b8:83","/dev/ttyUSB0","2",(-1,1)))
+                    "90:84:2b:07:b8:83","/dev/ttyUSB0","2",(-1,1),30))
+    cars.append(Car("101","RedPassC101",50,True,True,True,("passanger")))
+    cars.append(Car("102","WhitePasC102",50,True,True,True,("passanger")))
 
 
 
     # create trains
     print("******Creating Trains******")
-    trains.append(Train([cars[0]],0,1))
-    trains.append(Train([cars[1]],0,1))
+    trains.append(Train([cars[0],cars[2]],0,1))
+    trains.append(Train([cars[1],cars[3]],0,1))
 
     # # locate trains on track
     print("******Placing trains onto tracksegments******")
     trackSegments[1].train = trains[0]
     trackSegments[1].numCars = len(trains[0].cars)
-    trackSegments[2].train = trains[1]
-    trackSegments[2].numCars = len(trains[1].cars)
+    trackSegments[0].train = trains[1]
+    trackSegments[0].numCars = len(trains[1].cars)
 
     # output setup to screen
     for segment in trackSegments:

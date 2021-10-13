@@ -105,55 +105,74 @@ class Segment:
                 print("Got HERE")
                 print("train has triggered end of segment "+str(self.id))
                 # does this segment have a train
-                if self.train is None:
-                    # no train currently in segment
-                    # train arriving from prevSegment
-                    # get the train object and set it to this segment
-                    self.set_train(self.prevSegment.train)
-                    # if previous segment does not have a train then this was a false trigger
-                    if self.train is None:
-                        # prevSegment didnot have a train
-                        raise Exception(self.getSet_desc + " start triggered with no train here or in prevSegment ("+self.prevSegment.getSet_desc+")")
-                    # remove car from prevSegment
-                    self.prevSegment.decrementNumCars()
+                if self.get_train() is None:
+                    print("no train currently in segment")
+                    # train arriving from nextSegment (!GDOT)
+                    # TODO:
+                    None
 
                 else:
-                    # this segment has a train
-                    # is self.train moving towards next or prev segments
-                    if self.train.getSet_direction() == 1:
-                        None
-                        # train travelling GDoT towards nextSegment
-                        # remove car from prevSegment
-                        # self.prevSegment.decrementNumCars()
-                        # add a car to this segment
-                        # self.incrementNumCars()
+                    print("this segment has a train")
+                    # train is moving to nextSegment (GDOT)
+                    # Does nextSegment have a train
+                    if self.getSet_nextSegment().get_train() is None:
+                        print("next segment does not have a train")
+                        self.getSet_nextSegment().set_train(self.get_train())
+                        self.decrementNumCars()
                     else:
-                        # train is traveling !GDoT towards prevSegment
-                        # does prevSegment already contain a train
-                        if self.prevSegment.get_train() is None:
-                            # set self.train to prevSegment
-                            self.prevSegment.set_train(self.get_train())
+                        print("next segment has a train")
+                        # is nextSegment's train this train
+                        if self.getSet_nextSegment().get_train() is self.get_train():
+                            print("same train")
+                            # train is in the process of moving from this segment to nextSegment
+                            self.getSet_nextSegment().incrementNumCars()
                             self.decrementNumCars()
                         else:
-                            # train already set so just move car
-                            self.decrementNumCars()
-                            self.prevSegment.incrementNumCars()
+                            # there is another train currently in nextSegment
+                            # ERROR: possible collision detected
+                            print("ERROR: Collision detection in segment " + self.getSet_nextSegment.getSet_desc())
+                            print("Train moving from segment "+self.getSet_desc())
+                            print("Stopping ALL trains")
+                            raise Exception("ERROR: Collision Detected. Stopping ALL trains")
+
+
+
+
+                    # if self.train.getSet_direction() == 1:
+                    #     None
+                    #     # train travelling GDoT towards nextSegment
+                    #     # remove car from prevSegment
+                    #     # self.prevSegment.decrementNumCars()
+                    #     # add a car to this segment
+                    #     # self.incrementNumCars()
+                    # else:
+                    #     # train is traveling !GDoT towards prevSegment
+                    #     # does prevSegment already contain a train
+                    #     if self.prevSegment.get_train() is None:
+                    #         # set self.train to prevSegment
+                    #         self.prevSegment.set_train(self.get_train())
+                    #         self.decrementNumCars()
+                    #     else:
+                    #         # train already set so just move car
+                    #         self.decrementNumCars()
+                    #         self.prevSegment.incrementNumCars()
 
     def decrementNumCars(self):
         if self.numCars > 0:
             self.numCars -= 1
+        print("segment: " + self.getSet_desc() + " has " +str(self.getSet_numCars()))
         if self.numCars == 0:
             self.train = None
-            # track is clear for train to enter.
+            print("track is clear for train to enter.")
             # trainSent = False
             # check prevSegment for a parked train.
             if self.prevSegment.get_train() is not None:
-                # there is a train here
+                print("there is a train here")
                 if self.prevSegment.get_train().getSet_speed() == 0:
-                    # the train here is stopped
+                    print("the train here is stopped")
                     # check if train is traveling towards this segment
                     if self.prevSegment.get_train().getSet_direction() == 1:
-                        # train is heading this way so send it
+                        print("train is heading this way so send it")
                         self.prevSegment.sendTrain()
 
     def incrementNumCars(self):
@@ -163,8 +182,10 @@ class Segment:
             self.numCars +=1
 
     def sendTrain(self):
+        print("sendTrain(" + self.getSet_desc() + ")")
         if self.train is None:
-            print("ERROR: cannot sendTrain whe train is  None")
+            print("No train in " + self.getSet_desc() + ". Trying " + self.getSet_prevSegment().getSet_desc())
+            self.getSet_prevSegment().sendTrain()
         else:
             if self.train.getSet_direction() == 1:
                 # train is traveling GDoT to nextSegment
@@ -173,10 +194,12 @@ class Segment:
                     # no train in nextSegment. Track is clear.
                     # send train
                     self.train.getSet_speed(self.maxSpeed)
-
                 else:
-                    # nextSegment has a train so stop.
-                    self.train.getSet_speed(0)
+                    print("nextSegment has a train so stop")
+                    self.get_train().getSet_speed(0)
+                    print("Trying " + self.getSet_prevSegment().getSet_desc())
+                    self.getSet_prevSegment().sendTrain()
+
             else:
                 # train is traveling !GDoT to prevSegment
                 # if next segment has no train then send train

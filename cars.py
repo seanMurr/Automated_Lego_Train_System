@@ -1,4 +1,4 @@
-import hubComs, time 
+import hubComs, time
 class Car:
     def __init__(self,id,name,length,facing,couplingF,couplingB,types):
         self.id = id
@@ -28,7 +28,7 @@ class Car:
         print("Types: ", self.types)
 
 class Engine(Car):
-    def __init__(self,id,name,length,facing,couplingF,couplingB,types,hub_add,comPort,hub_id,mFacing):
+    def __init__(self,id,name,length,facing,couplingF,couplingB,types,hub_add,comPort,hub_id,mFacing,maxSpeed):
         super().__init__(id,name,length,facing,couplingF,couplingB,types)
         # the bluetooth address of this hub
         self.hub_add = hub_add
@@ -40,11 +40,17 @@ class Engine(Car):
         # motor is facing or if motor is connected to that port at all
         # mFacing[0] is port 'A' and mFacing[1] is port 'B'
         self.mFacing = mFacing
+        self.maxSpeed = maxSpeed
         self.display_info()
         self.attachHub()
 
+    def get_maxSpeed(self):
+        return self.maxSpeed
+
     def set_Speed(self,speed):
         # # TODO: Validation
+        if speed > self.get_maxSpeed():
+            speed = self.get_maxSpeed()
         print("Setting speed of ", self.name ," to ", speed)
         hubComs.sendToHub(self.comPort, "1,"+self.hub_id+","+str(speed))
         # print("{},{}".format(self.hub_id, speed).encode("utf-8"))
