@@ -50,10 +50,11 @@ def main():
 def createObjects():
     # create track segments
     print("******Creating Track Segments******")
-    trackSegments.append(Segment(0,"Seg00",144,None,0,None,0,"lego/train/segments/indicator/00",None,0,40))
-    trackSegments.append(Segment(1,"Seg01",144,None,0,None,0,"lego/train/segments/indicator/01",None,0,40))
-    trackSegments.append(Segment(2,"Seg02",144,None,0,None,0,"lego/train/segments/indicator/02",None,0,40))
-    trackSegments.append(Segment(0,"Seg03",144,None,0,None,0,"lego/train/segments/indicator/03",None,0,40))
+    trackSegments.append(Segment(0,"Seg00",144,None,0,None,0,"lego/train/segments/indicator/00",None,0,60))
+    trackSegments.append(Segment(1,"Seg01",144,None,0,None,0,"lego/train/segments/indicator/01",None,0,60))
+    trackSegments.append(Segment(2,"Seg02",144,None,0,None,0,"lego/train/segments/indicator/02",None,0,60))
+    trackSegments.append(Segment(3,"Seg03",144,None,0,None,0,"lego/train/segments/indicator/03",None,0,60))
+    trackSegments.append(Segment(4,"Seg04",144,None,0,None,0,"lego/train/segments/indicator/04",None,0,60))
 
 
     # attach track segments together
@@ -61,12 +62,14 @@ def createObjects():
     # outside loop
     trackSegments[0].getSet_nextSegment(trackSegments[1])
     trackSegments[0].getSet_prevSegment(trackSegments[3])
-    trackSegments[1].getSet_nextSegment(trackSegments[2])
+    trackSegments[1].getSet_nextSegment(trackSegments[4])
     trackSegments[1].getSet_prevSegment(trackSegments[0])
     trackSegments[2].getSet_nextSegment(trackSegments[3])
-    trackSegments[2].getSet_prevSegment(trackSegments[1])
+    trackSegments[2].getSet_prevSegment(trackSegments[4])
     trackSegments[3].getSet_nextSegment(trackSegments[0])
     trackSegments[3].getSet_prevSegment(trackSegments[2])
+    trackSegments[4].getSet_nextSegment(trackSegments[2])
+    trackSegments[4].getSet_prevSegment(trackSegments[1])
 
     # create cars
     print("*****Creating cars******")
