@@ -5,7 +5,7 @@ from Train import Train
 from Segment import Segment
 import paho.mqtt.client as mqttClient
 
-mqttServerAddress = "10.1.1.50"
+mqttServerAddress = "192.168.0.10"
 
 # setup system
 trackSegments = []
@@ -18,9 +18,11 @@ def main():
     createObjects()
 
     # prompt for all engines to be turned on and connected
+    print("\n\nMake sure the following engine hubs are connected\n")
     for car in cars:
         if isinstance(car, Engine):
-            input("Connect " + car.name +" engine and press enter")
+            print(car.name)
+    input("\nPress Enter to START\n")
 
     # create an MQTT client and attach routines to it.
     client = mqttClient.Client()
@@ -37,8 +39,8 @@ def main():
     # https://github.com/eclipse/paho.mqtt.python
     # for information on how to use other loop*() functions
     # client.loop_forever()
-
-    # if start is True then tell segment[0] to send train.
+    trackSegments[0].shortPrint()
+    # Tell each segment to send train if it has one and track is clear.
     trackSegments[0].sendTrain()
 
     start = False
@@ -50,51 +52,119 @@ def main():
 def createObjects():
     # create track segments
     print("******Creating Track Segments******")
-    trackSegments.append(Segment(0,"Seg00",144,None,0,None,0,"lego/train/segments/indicator/00",None,0,60))
-    trackSegments.append(Segment(1,"Seg01",144,None,0,None,0,"lego/train/segments/indicator/01",None,0,60))
-    trackSegments.append(Segment(2,"Seg02",144,None,0,None,0,"lego/train/segments/indicator/02",None,0,60))
-    trackSegments.append(Segment(3,"Seg03",144,None,0,None,0,"lego/train/segments/indicator/03",None,0,60))
-    trackSegments.append(Segment(4,"Seg04",144,None,0,None,0,"lego/train/segments/indicator/04",None,0,60))
+    trackSegments.append(Segment(0,"Seg00",90,[None],None,[0],0,[None],None,[0],0,"lego/train/segments/indicator/00",None,0,40))
+    trackSegments.append(Segment(1,"Seg01",128,[None],None,[0],0,[None],None,[0],0,"lego/train/segments/indicator/01",None,0,40))
+    trackSegments.append(Segment(2,"Seg02",160,[None],None,[0],0,[None],None,[0],0,"lego/train/segments/indicator/02",None,0,40))
+    trackSegments.append(Segment(3,"Seg03",112,[None],None,[0],0,[None],None,[0],0,"lego/train/segments/indicator/03",None,0,40))
+    trackSegments.append(Segment(4,"Seg04",144,[None],None,[0],0,[None],None,[0],0,"lego/train/segments/indicator/04",None,0,40))
+    trackSegments.append(Segment(5,"Seg05",208,[None],None,[0],0,[None],None,[0],0,"lego/train/segments/indicator/05",None,0,40))
+    trackSegments.append(Segment(6,"Seg06",272,[None],None,[0],0,[None],None,[0],0,"lego/train/segments/indicator/06",None,0,40))
+    trackSegments.append(Segment(7,"Seg07",80,[None],None,[0],0,[None],None,[0],0,"lego/train/segments/indicator/07",None,0,40))
+    trackSegments.append(Segment(8,"Seg08",160,[None],None,[0],0,[None],None,[0],0,"lego/train/segments/indicator/08",None,0,40))
+    trackSegments.append(Segment(9,"Seg09",144,[None],None,[0],0,[None],None,[0],0,"lego/train/segments/indicator/09",None,0,40))
+    trackSegments.append(Segment(10,"Seg10",144,[None],None,[0],0,[None],None,[0],0,"lego/train/segments/indicator/10",None,0,40))
+    trackSegments.append(Segment(11,"Seg11",240,[None],None,[0],0,[None],None,[0],0,"lego/train/segments/indicator/11",None,0,40))
+    trackSegments.append(Segment(12,"Seg12",288,[None],None,[0],0,[None],None,[0],0,"lego/train/segments/indicator/12",None,0,40))
+    trackSegments.append(Segment(13,"Seg13",224,[None],None,[0],0,[None],None,[0],0,"lego/train/segments/indicator/13",None,0,40))
 
-
+    for segment in trackSegments:
+        print(segment.getSet_desc())
     # attach track segments together
     print("******Connecting Track Segments******")
+    # inside loop
+    trackSegments[0].set_nextSegment(trackSegments[1],0)
+    trackSegments[0].set_prevSegment(trackSegments[6],0)
+    trackSegments[1].set_nextSegment(trackSegments[2],0)
+    trackSegments[1].set_prevSegment(trackSegments[0],0)
+    trackSegments[2].set_nextSegment(trackSegments[3],0)
+    trackSegments[2].set_prevSegment(trackSegments[1],0)
+    trackSegments[3].set_nextSegment(trackSegments[4],0)
+    trackSegments[3].set_prevSegment(trackSegments[2],0)
+    trackSegments[4].set_nextSegment(trackSegments[5],0)
+    trackSegments[4].set_prevSegment(trackSegments[3],0)
+    trackSegments[5].set_nextSegment(trackSegments[7],0)
+    trackSegments[5].set_prevSegment(trackSegments[4],0)
     # outside loop
-    trackSegments[0].getSet_nextSegment(trackSegments[1])
-    trackSegments[0].getSet_prevSegment(trackSegments[3])
-    trackSegments[1].getSet_nextSegment(trackSegments[4])
-    trackSegments[1].getSet_prevSegment(trackSegments[0])
-    trackSegments[2].getSet_nextSegment(trackSegments[3])
-    trackSegments[2].getSet_prevSegment(trackSegments[4])
-    trackSegments[3].getSet_nextSegment(trackSegments[0])
-    trackSegments[3].getSet_prevSegment(trackSegments[2])
-    trackSegments[4].getSet_nextSegment(trackSegments[2])
-    trackSegments[4].getSet_prevSegment(trackSegments[1])
+    trackSegments[6].set_nextSegment(trackSegments[0],0)
+    trackSegments[6].set_prevSegment(trackSegments[13],0)
+    trackSegments[7].set_nextSegment(trackSegments[8],0)
+    trackSegments[7].set_prevSegment(trackSegments[5],0)
+    trackSegments[8].set_nextSegment(trackSegments[9],0)
+    trackSegments[8].set_prevSegment(trackSegments[7],0)
+    trackSegments[9].set_nextSegment(trackSegments[10],0)
+    trackSegments[9].set_prevSegment(trackSegments[8],0)
+    trackSegments[10].set_nextSegment(trackSegments[11],0)
+    trackSegments[10].set_prevSegment(trackSegments[9],0)
+    trackSegments[11].set_nextSegment(trackSegments[12],0)
+    trackSegments[11].set_prevSegment(trackSegments[10],0)
+    trackSegments[12].set_nextSegment(trackSegments[13],0)
+    trackSegments[12].set_prevSegment(trackSegments[11],0)
+    trackSegments[13].set_nextSegment(trackSegments[6],0)
+    trackSegments[13].set_prevSegment(trackSegments[12],0)
+
+    # crossover: set sibling segments
+    trackSegments[0].getSet_siblingSegment(trackSegments[7])
+    trackSegments[7].getSet_siblingSegment(trackSegments[0])
 
     # create cars
     print("*****Creating cars******")
     # 0
-    cars.append(Engine("002","RedPass 1a",50,True,True,True,("engine","passanger"),
-                    "90:84:2b:01:a7:3a","/dev/ttyUSB0","0",(1,0),60))
+    cars.append(Engine("002","RedPass 1a",30,True,True,True,("engine","passanger"),
+                    "90:84:2b:01:a7:3a","/dev/ttyUSB0","0",(1,0),40))
+
     # 1
-    cars.append(Engine("001","Green Cargo 1a",50,True,True,True,("engine","cargo"),
-                    "90:84:2b:07:b8:83","/dev/ttyUSB0","2",(-1,1),30))
-    cars.append(Car("101","RedPassC101",50,True,True,True,("passanger")))
-    cars.append(Car("102","WhitePasC102",50,True,True,True,("passanger")))
-
-
+    cars.append(Engine("001","Green Cargo 1a",34,True,True,True,("engine","cargo"),
+                    "90:84:2b:07:b8:83","/dev/ttyUSB0","2",(-1,1),35))
+    # 2
+    cars.append(Car("101","RedPassC101",26,True,True,True,("passanger")))
+    # 3
+    cars.append(Car("102","WhitePasC102",26,True,True,True,("passanger")))
+    # 4
+    cars.append(Engine("003","RedPass 1b",30,True,True,True,("engine","passanger"),
+                    "90:84:2b:19:2c:22","/dev/ttyUSB0","1",(-1,0),40))
+    # 5
+    cars.append(Engine("004","WhitePass 1a",36,True,True,True,("engine","passanger"),
+                    "90:84:2b:be:49:08","/dev/ttyUSB1","0",(1,0),40))
+    # 6
+    cars.append(Engine("004","WhitePass 1b",36,True,True,True,("engine","passanger"),
+                    "90:84:2b:09:6b:88","/dev/ttyUSB1","1",(-1,0),40))
+    # 7
+    cars.append(Car("103","WhitePasC103",26,True,True,True,("passanger")))
+    # 8
+    cars.append(Engine("005","Mearsk 1b",40,True,True,True,("engine","cargo"),
+                    "90:84:2b:21:db:7d","/dev/ttyUSB1","2",(1,-1),35))
+    # 9
+    cars.append(Car("104","FreightC104",36,True,True,True,("cargo")))
+    # 10
+    cars.append(Car("105","FreightC105",36,True,True,True,("cargo")))
+    # 11
+    cars.append(Engine("006","BluePass 1a",34,True,True,True,("engine","passanger"),
+                    "90:84:2b:15:e1:7c","/dev/ttyUSB2","0",(1,0),40))
+    # 12
+    cars.append(Engine("007","BluePass 1b",34,True,True,True,("engine","passanger"),
+                    "90:84:2b:1d:56:25","/dev/ttyUSB2","1",(-1,0),40))
 
     # create trains
     print("******Creating Trains******")
-    trains.append(Train([cars[0],cars[2]],0,1))
+    # 0 Red Passanger 1
+    trains.append(Train([cars[0],cars[4]],0,1))
+    # 1 Green Cargo 1
     trains.append(Train([cars[1],cars[3]],0,1))
+    # 2 White Passanger 1
+    trains.append(Train([cars[5],cars[6]],0,1))
+    # 3 Mearsk Cargo 1
+    trains.append(Train([cars[8],cars[10]],0,1))
 
     # # locate trains on track
     print("******Placing trains onto tracksegments******")
     trackSegments[1].train = trains[0]
     trackSegments[1].numCars = len(trains[0].cars)
-    trackSegments[0].train = trains[1]
-    trackSegments[0].numCars = len(trains[1].cars)
+    trackSegments[5].train = trains[1]
+    trackSegments[5].numCars = len(trains[1].cars)
+    trackSegments[8].train = trains[2]
+    trackSegments[8].numCars = len(trains[2].cars)
+    trackSegments[13].train = trains[3]
+    trackSegments[13].numCars = len(trains[3].cars)
 
     # output setup to screen
     for segment in trackSegments:
@@ -138,6 +208,8 @@ except Exception as ex:
     print("****************   ERROR   ****************************")
     print(ex)
 finally:
+    # output short segment map
+    trackSegments[0].shortPrint()
     print("Stopping trains ")
     for train in trains:
         # print("stopping train ")
@@ -149,3 +221,6 @@ print("*************************")
 for segment in trackSegments:
     segment.print()
     print()
+
+# output short segment map
+trackSegments[0].shortPrint()

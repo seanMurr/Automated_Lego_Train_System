@@ -9,6 +9,9 @@ class Car:
         self.couplingB = couplingB
         self.types = types
 
+    def get_length(self):
+        return self.length
+
     def display_info(self):
         print("Car.id: ", self.id)
         print("Name: ", self.name)

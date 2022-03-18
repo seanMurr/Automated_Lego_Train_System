@@ -3,6 +3,9 @@
 # sends a message (msg) out to serial port (port)
 # port is the usb port that the bluetooth communication device is connected
 # To set speed of a hub send msg "1,[hubId],[speed]"
+# eg Set hubID 3, on USBport 0, to speed 20
+# eg hubComs.py 0 1,3,20
+
 # to setup a hub send the following messages
 #   "0" to put device into configure mode
 #   "[hubId]" the id of the hub. Each module can handle 3 hubs with id 0,1,or 2

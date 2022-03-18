@@ -13,27 +13,32 @@ String input;
 
 void setup() {
   Serial.begin(115200);
-  inEeprom.begin("lego_train"); // namespace
+  inEeprom.begin("lego_train",false); // namespace
 }
 
 void loop() {
+  clearLocalData();
   loadFromEeprom();
 
   displayData("CURRENT EEPROM DATA");
   
   input = getStringFromSerial("Do you want to update the current data Y/N");
   if(input == "Y" || input == "y") {
-    data.ssid = getStringFromSerial("Enter the WiFi ssid");
-    data.password = getStringFromSerial("Enter the WiFi password");
-    data.mqtt_server = getStringFromSerial("Enter the mqtt_server address");
+    data.ssid = "Lego_Train24"; //getStringFromSerial("Enter the WiFi ssid");
+    Serial.println(data.ssid);
+    data.password = "LegoTrain"; //getStringFromSerial("Enter the WiFi password");
+    Serial.println(data.password);
+    data.mqtt_server = "192.168.0.10"; //getStringFromSerial("Enter the mqtt_server address");
+    Serial.println(data.mqtt_server);
     data.segmentID = getStringFromSerial("Enter the segmentID for this device");
+    Serial.println(data.segmentID);
 
     displayData("CURRENT STORED DATA");
     input = getStringFromSerial("Do you want to store these new values Y/N");
     if(input == "Y" || input == "y") {
       // clear current Eeprom 'lego_train' values
       inEeprom.clear();
-      saveFromEeprom();
+      saveToEeprom();
     }
   }
 }
@@ -45,7 +50,7 @@ void loadFromEeprom() {
   data.segmentID = inEeprom.getString("segmentID", "NULL");
 }
 
-void saveFromEeprom() {
+void saveToEeprom() {
   inEeprom.putString("ssid", data.ssid);
   inEeprom.putString("password", data.password);
   inEeprom.putString("mqtt_server", data.mqtt_server);
@@ -55,11 +60,26 @@ void saveFromEeprom() {
 
 void displayData(char* msg) {
   Serial.printf("\n\n  ** %s **\n",msg);
-  Serial.printf("%-13s %s\n","ssid", data.ssid);
-  Serial.printf("%-13s %s\n","password", data.password);
-  Serial.printf("%-13s %s\n","mqtt_server", data.mqtt_server);
-  Serial.printf("%-13s %s\n","segmentID", data.segmentID);
+  Serial.printf("%-13s ","ssid");
+  Serial.println(data.ssid);
+  Serial.printf("%-13s ","password");
+  Serial.println(data.password);
+  Serial.printf("%-13s ","mqtt_server");
+  Serial.println(data.mqtt_server);
+  Serial.printf("%-13s ","segmentID");
+  Serial.println(data.segmentID);
   Serial.println();  
+//  Serial.println(data.ssid);
+//  Serial.println(data.password);
+//  Serial.println(data.mqtt_server);
+//  Serial.println(data.segmentID);
+//  Serial.println();
+}
+void clearLocalData() {
+  data.ssid = "";
+  data.password = "";
+  data.mqtt_server = "";
+  data.segmentID = "";
 }
 
 String getStringFromSerial(char* msg) {

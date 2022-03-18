@@ -27,6 +27,13 @@ class Train:
                 None
                 # TODO: set the timeStopped value to now
         return self.speed
+
+    def get_length(self):
+        length = 0
+        for car in self.cars:
+            length += car.get_length()
+        return length
+
 # Methods **********************************************************************
     def print(self):
         print("Train Object")
